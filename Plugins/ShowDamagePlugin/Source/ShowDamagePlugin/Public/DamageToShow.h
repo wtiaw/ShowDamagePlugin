@@ -11,6 +11,7 @@
 
 enum class EDamageAttributeType : uint8;
 class UShowDamageComponent;
+
 /**
  * 
  */
@@ -23,7 +24,7 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UImage* DamageIcon;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* DamageText;
 
 	UPROPERTY(meta = (BindWidget))
@@ -39,15 +40,40 @@ public:
 
 private:
 	int RandomX;
+	int RandomXMin;
+	int RandomXMax;
+	
 	int RandomY;
+	int RandomYMin;
+	int RandomYMax;
+
+	int NormalFontSize;
+	int CritFontSize;
+
+	FLinearColor CritColor;
 
 public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void OnAnimationStartedPlaying(UUMGSequencePlayer& Player) override;
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
 	
-	void ShowDamageText(int Damage, FLinearColor Color, UTexture2D* InDamageIcon, bool bCrit, FLinearColor InCritColor);
+	void ShowDamageText(int Damage, FLinearColor Color, UTexture2D* InDamageIcon, bool bCrit);
+
+	void SetNormalFontSize(int NewNormalFontSize);
+	void SetCritFontSize(int NewCritFontSize);
+
+	void SetRandomX(int32 XMin, int32 XMax);
+	void SetRandomY(int32 YMin, int32 YMax);
+
+	void SetCritColor(FLinearColor NewCritColor);
+
+	void SetFontStyle(const UObject* Font) const;
+
+	// UFUNCTION(BlueprintImplementableEvent)
+	// void Test();
 
 private:
 	void SetLocation();
+
+	void SetRandomXY();
 };

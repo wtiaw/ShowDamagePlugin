@@ -27,14 +27,13 @@ void UDamageToShow::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 	SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UDamageToShow::ShowDamageText(int Damage, FLinearColor Color, UTexture2D* InDamageIcon, bool bCrit, FLinearColor InCritColor)
+void UDamageToShow::ShowDamageText(int Damage, FLinearColor Color, UTexture2D* InDamageIcon, bool bCrit)
 {
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 
 	SetLocation();
 	
-	RandomX = FMath::RandRange(-30, 30);
-	RandomY = FMath::RandRange(-30, 30);
+	SetRandomXY();
 	
 	DamageText->SetText(UKismetTextLibrary::Conv_IntToText(Damage));
 	
@@ -42,26 +41,61 @@ void UDamageToShow::ShowDamageText(int Damage, FLinearColor Color, UTexture2D* I
 	{
 		DamageIcon->SetVisibility(ESlateVisibility::HitTestInvisible);
 		DamageIcon->SetBrushFromTexture(InDamageIcon);
+		DamageIcon->SetColorAndOpacity(Color);
 	}
 	else
 	{
 		DamageIcon->SetVisibility(ESlateVisibility::Collapsed);
 	}
-	
+
 	if(bCrit)
 	{
-		CanvasPanel->SetRenderScale(FVector2D(1.2,1.2));
+		FSlateFontInfo Font = DamageText->Font;
+		Font.Size = CritFontSize;
 
-		DamageText->SetColorAndOpacity(InCritColor);
+		DamageText->SetFont(Font);
+		DamageText->SetColorAndOpacity(CritColor);
+
+		DamageIcon->SetColorAndOpacity(CritColor);
 	}
 	else
 	{
-		CanvasPanel->SetRenderScale(FVector2D(1,1));
+		FSlateFontInfo Font = DamageText->Font;
+		Font.Size = NormalFontSize;
 
+		DamageText->SetFont(Font);
 		DamageText->SetColorAndOpacity(Color);
 	}
-	
+
+	// Test();
 	PlayAnimation(ShowDamage);
+}
+
+void UDamageToShow::SetNormalFontSize(int NewNormalFontSize)
+{
+	NormalFontSize = NewNormalFontSize;
+}
+
+void UDamageToShow::SetCritFontSize(int NewCritFontSize)
+{
+	CritFontSize = NewCritFontSize;
+}
+
+void UDamageToShow::SetRandomX(int32 XMin, int32 XMax)
+{
+	RandomXMin = XMin;
+	RandomXMax = XMax;
+}
+
+void UDamageToShow::SetRandomY(int32 YMin, int32 YMax)
+{
+	RandomYMin = YMin;
+	RandomYMax = YMax;
+}
+
+void UDamageToShow::SetCritColor(FLinearColor NewCritColor)
+{
+	CritColor = NewCritColor;
 }
 
 void UDamageToShow::SetLocation()
@@ -72,4 +106,21 @@ void UDamageToShow::SetLocation()
 
 	const FVector2D TextPosition = FVector2D(ScreenLocation.X + RandomX, ScreenLocation.Y + RandomY);
 	SetPositionInViewport(TextPosition);
+}
+
+void UDamageToShow::SetRandomXY()
+{
+	RandomX = FMath::RandRange(RandomXMin, RandomXMax);
+	RandomY = FMath::RandRange(RandomYMin, RandomYMax);
+}
+
+void UDamageToShow::SetFontStyle(const UObject* Font) const
+{
+	if(Font)
+	{
+		FSlateFontInfo FontInfo = DamageText->Font;
+		FontInfo.FontObject = Font;
+
+		DamageText->SetFont(FontInfo);
+	}
 }
