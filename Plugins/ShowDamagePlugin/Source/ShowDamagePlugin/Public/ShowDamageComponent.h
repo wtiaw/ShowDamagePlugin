@@ -4,42 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "DamageToShow.h"
+#include "ShowDamageStyle.h"
 #include "Components/SceneComponent.h"
 #include "ShowDamageComponent.generated.h"
 
-/**
- * @brief 伤害属性
- */
-UENUM(BlueprintType)
-enum class EDamageAttributeType : uint8
-{
-	None,
-
-	/**
-	 * @brief 普通属性
-	 */
-	Normal,
-
-	/**
-	 * @brief 水属性
-	 */
-	Water,
-
-	/**
-	 * @brief 火属性
-	 */
-	Fire,
-
-	/**
-	 * @brief 光属性
-	 */
-	Light,
-
-	/**
-	 * @brief 暗属性
-	 */
-	Dark,
-};
 
 /**
  * @brief 挂载在 Actor 身上的 Component
@@ -58,11 +26,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Show Damage Component|Normal")
 	int InitNumber;
 
-	/**
-	 * 需要生成的 Widget Class
-	 */
-	UPROPERTY(EditAnywhere, Category = "Show Damage Component|Normal")
-	TSubclassOf<UDamageToShow> WidgetClass;
+	
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category = "Show Damage Component")
+	UShowDamageStyle* ShowDamageStyle;
 
 	/**
 	 * X 偏移的最小值
@@ -106,23 +73,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Show Damage Component|Font")
 	int CritFontSize;
 	
-	/**
-	 * 伤害属性以及对应的伤害颜色
-	 */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Show Damage Component|Font")
-	TMap<EDamageAttributeType, FLinearColor> DamageColor;
-
-	/**
-	 * 伤害属性以及对应的伤害 Icon
-	 */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Show Damage Component|Font")
-	TMap<EDamageAttributeType, UTexture2D*> DamageIcon;
-
-	/**
-	 * 暴击时的伤害颜色
-	 */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Show Damage Component|Font")
-	FLinearColor CritColor;
+	
 	
 private:
 	/**

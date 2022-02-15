@@ -10,7 +10,7 @@ void UDamageToShow::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	
-	SetLocation();
+	// SetLocation();
 }
 
 void UDamageToShow::OnAnimationStartedPlaying(UUMGSequencePlayer& Player)
@@ -67,8 +67,15 @@ void UDamageToShow::ShowDamageText(int Damage, FLinearColor Color, UTexture2D* I
 		DamageText->SetColorAndOpacity(Color);
 	}
 
-	// Test();
-	PlayAnimation(ShowDamage);
+
+	TargetX->FloatCurve.UpdateOrAddKey(0,0);
+	TargetY->FloatCurve.UpdateOrAddKey(0,0);
+	TargetX->FloatCurve.UpdateOrAddKey(1,RandomX);
+	TargetY->FloatCurve.UpdateOrAddKey(1,RandomY);
+
+	
+	Test();
+	// PlayAnimation(ShowDamage);
 }
 
 void UDamageToShow::SetNormalFontSize(int NewNormalFontSize)
@@ -96,6 +103,14 @@ void UDamageToShow::SetRandomY(int32 YMin, int32 YMax)
 void UDamageToShow::SetCritColor(FLinearColor NewCritColor)
 {
 	CritColor = NewCritColor;
+}
+
+void UDamageToShow::UpdateOrAddKey(UCurveFloat* CurveFloat, float InTime, float InValue, const bool bUnwindRotation, ERichCurveInterpMode NewInterpMode,
+	bool bAutoSetTangents)
+{
+	FKeyHandle KeyHandle = CurveFloat->FloatCurve.UpdateOrAddKey(InTime, InValue, bUnwindRotation);
+
+	CurveFloat->FloatCurve.SetKeyInterpMode(KeyHandle, NewInterpMode, bAutoSetTangents);
 }
 
 void UDamageToShow::SetLocation()

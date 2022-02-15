@@ -35,8 +35,14 @@ public:
 
 	int Index;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UShowDamageComponent* Component;
+
+	UPROPERTY(BlueprintReadOnly,EditAnywhere)
+	UCurveFloat* TargetX;
+
+	UPROPERTY(BlueprintReadOnly,EditAnywhere)
+	UCurveFloat* TargetY;
 
 private:
 	int RandomX;
@@ -69,8 +75,11 @@ public:
 
 	void SetFontStyle(const UObject* Font) const;
 
-	// UFUNCTION(BlueprintImplementableEvent)
-	// void Test();
+	UFUNCTION(BlueprintImplementableEvent)
+	void Test();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateOrAddKey(UCurveFloat* CurveFloat, float InTime, float InValue, const bool bUnwindRotation = false, ERichCurveInterpMode NewInterpMode = RCIM_Linear,bool bAutoSetTangents = false);
 
 private:
 	void SetLocation();
